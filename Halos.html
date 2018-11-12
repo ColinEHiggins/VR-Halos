@@ -3,13 +3,37 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
 <script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec3 vPosition;
+attribute float whichMatrix;
+varying vec4 fColor;
+uniform mat3 rotationMatrix1;
+uniform mat3 rotationMatrix2;
+uniform mat3 rotationMatrix3;
 void
+main()
 {
+
+    if (whichMatrix==1.0) {
+        fColor = vec4(0.0,1.0-(gl_Position[2]/2.0+0.5),1.0-(gl_Position[2]/2.0+0.5),1.0);
+        gl_Position = vec4(vPosition*rotationMatrix1,1);
+    }
+    if (whichMatrix==2.0) {
+        fColor = vec4(1.0-(gl_Position[2]/2.0+0.5),0,1.0-(gl_Position[2]/2.0+0.5),1.0);
+        gl_Position = vec4(vPosition*rotationMatrix2,1);
+    }
+    if (whichMatrix==3.0) {
+        fColor = vec4(0.0,0,1.0-(gl_Position[2]/2.0+0.5),1.0);
+        gl_Position = vec4(vPosition*rotationMatrix3,1);
+    }
+
 
 }
 </script>
 
 <script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+
+varying vec4 fColor;
 
 void
 main()
@@ -18,15 +42,21 @@ main()
 }
 </script>
 
-<script type="text/javascript" src="../Common/webgl-utils.js"></script>
-<script type="text/javascript" src="../Common/initShaders.js"></script>
-<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="Common/webgl-utils.js"></script>
+<script type="text/javascript" src="Common/initShaders.js"></script>
+<script type="text/javascript" src="Common/MV.js"></script>
 <script type="text/javascript" src="Halos.js"></script>
 </head>
 
 <body>
   <div>
-    Insert Halos Here
+    X Rotation Value: 0 <input id="x-slider" type="range" min="0" max="1" step="0.01" value="0" 1 />
+  </div>
+  <div>
+    Y Rotation Value: 0 <input id="y-slider" type="range" min="0" max="1" step="0.01" value="0" 1 />
+  </div>
+  <div>
+    Z Rotation Value: 0 <input id="z-slider" type="range" min="0" max="1" step="0.01" value="0" 1 />
   </div>
 <canvas id="gl-canvas" width="512" height="512">
 Oops ... your browser doesn't support the HTML5 canvas element
