@@ -11,15 +11,16 @@ camera.position.z = 4;
 
 // Create a renderer with Antialiasing
 var renderer = new THREE.WebGLRenderer({antialias:true});
-
+document.body.appendChild( WEBVR.createButton( renderer ) );
 // Configure renderer clear color
 renderer.setClearColor("#000000");
 
 // Configure renderer size
 renderer.setSize( window.innerWidth, window.innerHeight );
-
+renderer.vr.enabled = true;
 // Append Renderer to DOM
 document.body.appendChild( renderer.domElement );
+
 
 // ------------------------------------------------
 // FUN STARTS HERE
@@ -39,12 +40,12 @@ var torus2 = new THREE.Mesh( geometry2, material2 );
 var texture3 = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry3 = new THREE.TorusGeometry( 0.5, 0.2, 8, 100 );
 var material3 = new THREE.MeshBasicMaterial( { map: texture3 } );
-var torus3 = new THREE.Mesh( geometry3, material3 ); 
+var torus3 = new THREE.Mesh( geometry3, material3 );
 
 // Add halos to Scene
 scene.add( torus );
 scene.add( torus2 );
-scene.add( torus3 ); 
+scene.add( torus3 );
 
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
@@ -60,11 +61,11 @@ function onDocumentMouseDown( event ) {
 
 	raycaster.setFromCamera( vector, camera);
 	var intersects = raycaster.intersectObjects(scene.children);
-	
-	for ( var i = 0; i < intersects.length; i++ ) 
-	{ 
-		intersects[ i ].object.material.color.set( 0xff0000 ); 
-	}	
+
+	for ( var i = 0; i < intersects.length; i++ )
+	{
+		intersects[ i ].object.material.color.set( 0xff0000 );
+	}
 }
 
 
@@ -73,16 +74,16 @@ var render = function () {
   requestAnimationFrame( render );
 
   torus.rotation.x += 0.01;
-  torus.rotation.y += 0.01;
 
-  torus2.rotation.x += 0.02;
   torus2.rotation.y += 0.02;
-  
-  torus3.rotation.x += 0.03;
-  torus3.rotation.y += 0.03;  
+
+  torus3.rotation.z += 0.03;
 
   // Render the scene
-  renderer.render(scene, camera);
+	renderer.setAnimationLoop( function () {
+		renderer.render( scene, camera );
+	});
+
 };
 
 render();
