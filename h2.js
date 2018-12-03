@@ -16,8 +16,8 @@ var cameraLocationTwo = new THREE.Object3D();
 cameraLocationTwo.translateX(0.8);
 var cl2 = new THREE.Group();
 cl2.add(cameraLocationTwo)
-cameraLocationThree.translateY(-0.3);
 var cameraLocationThree = new THREE.Object3D();
+cameraLocationThree.translateY(-0.3);
 var cl3 = new THREE.Group();
 cl3.add(cameraLocationThree)
 user.add( camera );
