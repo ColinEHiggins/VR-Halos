@@ -11,15 +11,15 @@ var user = new THREE.Group();
 var cameraLocationOne = new THREE.Object3D();
 cameraLocationOne.translateY(-1.3);
 var cl1 = new THREE.Group();
-cl1.add(cameraLocationOne)
+cl1.add(cameraLocationOne);
 var cameraLocationTwo = new THREE.Object3D();
 cameraLocationTwo.translateX(0.8);
 var cl2 = new THREE.Group();
-cl2.add(cameraLocationTwo)
-cameraLocationThree.translateY(-0.3);
+cl2.add(cameraLocationTwo);
 var cameraLocationThree = new THREE.Object3D();
+cameraLocationThree.translateY(-0.3);
 var cl3 = new THREE.Group();
-cl3.add(cameraLocationThree)
+cl3.add(cameraLocationThree);
 user.add( camera );
 scene.add(user);
 user.translateZ(3);
@@ -104,8 +104,6 @@ console.log(torus.position,"torus");
 // checks to see if mouse position overlaps with any of the points contained by 
 // any of the halos
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-
-var projector = new THREE.Projector();
 
 function onDocumentMouseDown( event ) {
 	var raycaster = new THREE.Raycaster();
