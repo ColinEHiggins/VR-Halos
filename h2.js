@@ -16,13 +16,31 @@ var cameraLocationTwo = new THREE.Object3D();
 cameraLocationTwo.translateX(0.8);
 var cl2 = new THREE.Group();
 cl2.add(cameraLocationTwo)
-var cameraLocationThree = new THREE.Object3D();
 cameraLocationThree.translateY(-0.3);
+var cameraLocationThree = new THREE.Object3D();
 var cl3 = new THREE.Group();
 cl3.add(cameraLocationThree)
 user.add( camera );
 scene.add(user);
 user.translateZ(3);
+
+// create an AudioListener and add it to the camera
+var listener = new THREE.AudioListener();
+camera.add( listener );
+
+// create a global audio source
+var sound = new THREE.Audio( listener );
+
+// load a sound and set it as the Audio object's buffer
+// adds ambient music to the scene
+var audioLoader = new THREE.AudioLoader();
+audioLoader.load( 'ambient.wav', function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.05 );
+	sound.play();
+});
+
 // Create a renderer with Antialiasing
 var renderer = new THREE.WebGLRenderer({antialias:true});
 document.body.appendChild( WEBVR.createButton( renderer ) );
@@ -40,7 +58,7 @@ console.log(camera.position,"hi");
 // FUN STARTS HERE
 // ------------------------------------------------
 
-// Create a Cube Mesh with basic material
+// Creates and textures 3 halos
 var texture = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry = new THREE.TorusGeometry( 1.5, 0.2, 80, 100 );
 var material = new THREE.MeshBasicMaterial( { map: texture } );
@@ -56,15 +74,35 @@ var geometry3 = new THREE.TorusGeometry( 0.5, 0.2, 80, 100 );
 var material3 = new THREE.MeshBasicMaterial( { map: texture3 } );
 var torus3 = new THREE.Mesh( geometry3, material3 );
 
-// Add halos to Scene
+// generates background particles
+var material4 = new THREE.PointsMaterial({ color: 0xffffff, size: 1, sizeAttenuation: false });
+var geometry4 = new THREE.Geometry();
+var x, y, z;
+var i;
+for (i = 0; i < 15000; i++) 
+{
+      x = (Math.random() * 1500) - 750;
+      y = (Math.random() * 1500) - 750;
+      z = (Math.random() * 1500) - 750;
+      
+      geometry4.vertices.push(new THREE.Vector3(x, y, z));
+}
+    
+    var pointCloud = new THREE.Points(geometry4, material4);
+
+// Add halos and particles to scene
 scene.add( torus );
 scene.add( torus2 );
 scene.add( torus3 );
 scene.add( cl1 );
 scene.add( cl2 );
 scene.add( cl3 );
+scene.add(pointCloud);
 
 console.log(torus.position,"torus");
+
+// checks to see if mouse position overlaps with any of the points contained by 
+// any of the halos
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
 var projector = new THREE.Projector();
