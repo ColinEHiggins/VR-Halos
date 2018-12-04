@@ -7,7 +7,7 @@ var scene = new THREE.Scene();
 var cameraLocation = 0;
 var lastLocation = 0;
 // Create a basic perspective camera
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+var camera = new THREE.PerspectiveCamera( 100, window.innerWidth/window.innerHeight, 0.1, 1000 );
 var user = new THREE.Group();
 
 user.add( camera );
