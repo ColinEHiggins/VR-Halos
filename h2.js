@@ -105,19 +105,21 @@ function onDocumentMouseDown( event ) {
 
 	raycaster.setFromCamera( vector, camera);
 	var intersects = raycaster.intersectObjects(scene.children);
-	intersectRadius = intersects[0].object.geometry.boundingSphere.radius
-	console.log(intersectRadius,"IntersectRadius")
-	if (intersectRadius > 150){
-		console.log('torus');
-		cameraLocation = 1;
-	}
-	else if (intersectRadius > 100) {
-		console.log('torus2');
-		cameraLocation = 2;
-	}
-	else {
-		console.log('torus3');
-		cameraLocation = 3;
+	if(intersects.length!=0){
+		intersectRadius = intersects[0].object.geometry.boundingSphere.radius
+		console.log(intersectRadius,"IntersectRadius")
+		if (intersectRadius > 150){
+			console.log('torus');
+			cameraLocation = 1;
+		}
+		else if (intersectRadius > 100) {
+			console.log('torus2');
+			cameraLocation = 2;
+		}
+		else {
+			console.log('torus3');
+			cameraLocation = 3;
+		}
 	}
 }
 
