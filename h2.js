@@ -4,42 +4,32 @@
 
 // Create an empty scene
 var scene = new THREE.Scene();
-var cameraLocation = 1;
+var cameraLocation = 0;
 // Create a basic perspective camera
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 var user = new THREE.Group();
-var cameraLocationOne = new THREE.Object3D();
-cameraLocationOne.translateY(-1.3);
-var cl1 = new THREE.Group();
-cl1.add(cameraLocationOne)
-var cameraLocationTwo = new THREE.Object3D();
-cameraLocationTwo.translateX(0.8);
-var cl2 = new THREE.Group();
-cl2.add(cameraLocationTwo)
-var cameraLocationThree = new THREE.Object3D();
-cameraLocationThree.translateY(-0.3);
-var cl3 = new THREE.Group();
-cl3.add(cameraLocationThree)
+
+
 user.add( camera );
 scene.add(user);
 user.translateZ(3);
 
 // create an AudioListener and add it to the camera
-var listener = new THREE.AudioListener();
-camera.add( listener );
+// var listener = new THREE.AudioListener();
+// camera.add( listener );
 
 // create a global audio source
-var sound = new THREE.Audio( listener );
+// var sound = new THREE.Audio( listener );
 
 // load a sound and set it as the Audio object's buffer
 // adds ambient music to the scene
-var audioLoader = new THREE.AudioLoader();
-audioLoader.load( 'ambient.wav', function( buffer ) {
-	sound.setBuffer( buffer );
-	sound.setLoop( true );
-	sound.setVolume( 0.05 );
-	sound.play();
-});
+// var audioLoader = new THREE.AudioLoader();
+// audioLoader.load( 'ambient.wav', function( buffer ) {
+// 	sound.setBuffer( buffer );
+// 	sound.setLoop( true );
+// 	sound.setVolume( 0.05 );
+// 	sound.play();
+// });
 
 // Create a renderer with Antialiasing
 var renderer = new THREE.WebGLRenderer({antialias:true});
@@ -90,13 +80,29 @@ for (i = 0; i < 15000; i++)
     
     var pointCloud = new THREE.Points(geometry4, material4);
 
+var cameraLocationOne = new THREE.Object3D()
+cameraLocationOne.translateY(-1.25);
+var cl1 = new THREE.Group();
+cl1.add(cameraLocationOne);
+var cameraLocationTwo = new THREE.Object3D();
+cameraLocationTwo.translateX(0.8);
+var cl2 = new THREE.Group();
+cl2.add(cameraLocationTwo)
+var cameraLocationThree = new THREE.Object3D();
+cameraLocationThree.translateY(-0.3);
+var cl3 = new THREE.Group();
+cl3.add(cameraLocationThree)
+
+
+
+
 // Add halos and particles to scene
-scene.add( torus );
-scene.add( torus2 );
-scene.add( torus3 );
 scene.add( cl1 );
 scene.add( cl2 );
 scene.add( cl3 );
+scene.add( torus );
+scene.add( torus2 );
+scene.add( torus3 );
 scene.add(pointCloud);
 
 console.log(torus.position,"torus");
@@ -105,7 +111,6 @@ console.log(torus.position,"torus");
 // any of the halos
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
-var projector = new THREE.Projector();
 
 function onDocumentMouseDown( event ) {
 	var raycaster = new THREE.Raycaster();
@@ -117,43 +122,66 @@ function onDocumentMouseDown( event ) {
 
 	raycaster.setFromCamera( vector, camera);
 	var intersects = raycaster.intersectObjects(scene.children);
-
-	for ( var i = 0; i < intersects.length; i++ )
-	{
-		intersects[ i ].object.material.color.set( 0xff0000 );
+	console.log(intersects.length);
+	console.log(intersects)
+	intersectRadius = intersects[0].object.geometry.boundingSphere.radius
+	if (intersectRadius == 1.7000000504543684){
+		console.log('torus');
+		cameraLocation = 1;
 	}
+	if (intersectRadius == 1.2000000489407703) {
+		console.log('torus2');
+		cameraLocation = 2;
+	}
+	if (intersectRadius == 0.7000000305387697) {
+		console.log('torus3');
+		cameraLocation = 3;
+	}
+
+	// for ( var i = 0; i < intersects.length; i++ )
+	// {
+	// 	intersects[ i ].object.material.color.set( 0xff0000 );
+	// }
 }
 
 
 // Render Loop
 var render = function () {
+	//var temp  = cameraLocationOne.getWorldPosition(new THREE.Vector3(0,0,0));
 	cl1.rotation.x += 0.01;
 	cl2.rotation.y += 0.02;
 	cl3.rotation.z += 0.03;
-	cl1.updateMatrixWorld();
-	console.log(cameraLocationOne.position,"One");
-	console.log(cameraLocationTwo.position,"Two");
-	console.log(cameraLocationThree.position,"Three");
-	console.log(cl1.rotation,"One");
-	console.log(cl2.rotation,"Two");
-	console.log(cl3.rotation,"Three");
+	//console.log(temp,"One",cl1.rotation);
+	//console.log(cameraLocationTwo.position,"Two");
+	//console.log(cameraLocationThree.position,"Three");
+	//console.log(cl1.rotation,"One");
+	//console.log(cl2.rotation,"Two");
+	//console.log(cl3.rotation,"Three");
+	//console.log(torus.position,"torusOne")
+	//console.log(camera.position,"camera")
 	if (cameraLocation == 1){
-		user.position = cameraLocationOne.position;
+	//	console.log(temp.x,temp.y,temp.z)
+		temp = cameraLocationOne.getWorldPosition(new THREE.Vector3(0, 0, 0));
+		user.position.set(temp.x,temp.y,temp.z);
+	//	console.log(user.position,"ueser")
+
 	}
 	else if (cameraLocation == 2) {
-		user.position = cameraLocationTwo.position;
+		temp = cameraLocationTwo.getWorldPosition(new THREE.Vector3(0, 0, 0));
+		user.position.set(temp.x, temp.y, temp.z);
 	}
 	else if (cameraLocation == 3) {
-		user.position = cameraLocationThree.position;
+		temp = cameraLocationThree.getWorldPosition(new THREE.Vector3(0, 0, 0));
+		user.position.set(temp.x, temp.y, temp.z);
 	}
-  requestAnimationFrame( render );
+  	requestAnimationFrame( render );
 	torus.rotation.x += 0.01;
 
-  torus2.rotation.y += 0.02;
+  	torus2.rotation.y += 0.02;
 
-  torus3.rotation.z += 0.03;
-  // Render the scene
-	console.log(user.position,"Camera Position");
+  	torus3.rotation.z += 0.03;
+  	// Render the scene
+	//console.log(user.position,"Camera Position");
 	renderer.setAnimationLoop( function () {
 		renderer.render( scene, camera );
 	});
