@@ -7,6 +7,37 @@ var scene = new THREE.Scene();
 var cameraLocation = 0;
 var lastLocation = 0;
 
+
+// Setup for locking the cursor
+/* // other vars
+var controlsEnabled = false;
+var raycaster2;
+
+
+var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+			if ( havePointerLock ) {
+				var element = document.body;
+				var pointerlockchange = function ( event ) {
+					if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
+						controlsEnabled = true;
+						controls.enabled = true;
+					} else {
+						controlsEnabled = false;
+						controls.enabled = false;
+					}
+				};
+				var pointerlockerror = function ( event ) {
+						console.log("Oops");
+				};
+				// Hook pointer lock state change events
+				document.addEventListener( 'pointerlockchange', pointerlockchange, false );
+				document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
+				document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
+				document.addEventListener( 'pointerlockerror', pointerlockerror, false );
+				document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
+				document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
+			}  */
+			
 // Create a basic perspective camera
 var camera = new THREE.PerspectiveCamera( 100, window.innerWidth/window.innerHeight, 0.1, 1000 );
 var user = new THREE.Group();
@@ -94,16 +125,31 @@ console.log(torus.position,"torus");
 // checks to see if mouse position overlaps with any of the points contained by 
 // any of the halos
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-document.addEventListener('mousemove', mouseMove, false);
+var radians = 0.08;
+var speed = 10;
+document.addEventListener( 'keydown', onKeyDown, false );
 
-function mouseMove( event ) 
+function onKeyDown( event ) 
 {
-		mouseX = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouseY = - ( event.clientY / window.innerHeight ) * 2 + 1;
-		
-		console.log(mouseX, "X");
-		console.log(mouseY, "Y");
-	
+    switch( event.keyCode ) {
+
+        case 37: // left arrow (look left)
+        camera.rotateY( radians );
+        break;
+
+        case 39: // right arrow (look right)
+        camera.rotateY( -radians );
+        break;
+
+        case 38: // up arrow (look up)
+        camera.rotateX( radians );
+        break;
+
+        case 40: // down arrow (look down)
+        camera.rotateX( -radians );
+        break;
+
+    }
 }
 
 function onDocumentMouseDown( event ) {
@@ -132,6 +178,25 @@ function onDocumentMouseDown( event ) {
 			cameraLocation = 3;
 		}
 	}
+	// Kept here in case mouse rotation will be used later. Allows us to lock the cursor
+ 	/* // Ask the browser to lock the pointer
+ 	element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+	if ( /Firefox/i.test( navigator.userAgent ) ) {
+		var fullscreenchange = function ( event ) {
+			if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
+				document.removeEventListener( 'fullscreenchange', fullscreenchange );
+				document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
+				element.requestPointerLock();
+			}
+		};
+		document.addEventListener( 'fullscreenchange', fullscreenchange, false );
+		document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
+		element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+		element.requestFullscreen();
+	} else {
+		element.requestPointerLock();
+	}
+	raycaster2 = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );  */
 }
 
 
@@ -174,13 +239,12 @@ var render = function () {
 		}
 		user.rotation.z += 0.03
 	}
+		
   	requestAnimationFrame( render );
 	torus.rotation.x += 0.01;
   	torus2.rotation.y += 0.02;
   	torus3.rotation.z += 0.03;
 	
-	pointCloud.rotation.y +=0.01;
-	pointCloud.rotation.z += 0.01;
 	renderer.setAnimationLoop( function () {
 		renderer.render( scene, camera );
 	});
