@@ -7,6 +7,23 @@ var scene = new THREE.Scene();
 var cameraLocation = 0;
 var lastLocation = 0;
 
+var listener = new THREE.AudioListener();
+camera.add(listener);
+
+// create a global audio source
+var sound = new THREE.Audio(listener);
+
+// load a sound and set it as the Audio object's buffer
+// adds ambient music to the scene
+var audioLoader = new THREE.AudioLoader();
+audioLoader.load('ambient.wav', function (buffer) {
+	sound.setBuffer(buffer);
+	sound.setLoop(true);
+	sound.setVolume(0.05);
+	sound.play();
+});
+
+
 // Create a basic perspective camera
 var camera = new THREE.PerspectiveCamera( 100, window.innerWidth/window.innerHeight, 0.1, 1000 );
 var user = new THREE.Group();
