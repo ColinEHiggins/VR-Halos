@@ -55,9 +55,10 @@ console.log(camera.position,"hi");
 
 // Creates and textures 3 halos
 var texture = new THREE.TextureLoader().load( 'texture1.jpg' );
+var bumpMapTexture = new THREE.TextureLoader().load('Bump.png');
 var geometry = new THREE.TorusGeometry( 150, 20, 80, 100 );
-var material = new THREE.MeshLambertMaterial( { map: texture } );
-//material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+//var material = new THREE.MeshLambertMaterial( { map: texture } );
+var material = new THREE.MeshPhongMaterial({ color: 0x00ffff, bumpMap: bumpMapTexture, bumpScale: 10 });
 var torus = new THREE.Mesh( geometry, material );
 torus.castShadow = true;
 torus.receiveShadow = true;
