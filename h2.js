@@ -14,8 +14,26 @@ user.add( camera );
 scene.add(user);
 user.translateZ(350);
 
+//create Lighting
+var light = new THREE.DirectionalLight( 0x00FF00);
+light.position.set(200,200,200);
+light.target.position.set(0,0,0);
+light.shadow.camera.near = 0;
+light.shadow.camera.far = 15;
+light.shadow.camera.left = -5;
+light.shadow.camera.right = 5;
+light.shadow.camera.top = 5;
+light.shadow.camera.bottom = -5;
+light.castShadow = true;
+scene.add(light);
+console.log(light)
+
 var ambient = new THREE.AmbientLight(0x444444);
 scene.add(ambient);
+
+var helper = new THREE.DirectionalLightHelper(light, 50);
+scene.add(helper)
+
 // Create a renderer with Antialiasing
 var renderer = new THREE.WebGLRenderer({antialias:true});
 document.body.appendChild( WEBVR.createButton( renderer ) );
