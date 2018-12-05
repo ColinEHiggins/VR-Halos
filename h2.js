@@ -14,6 +14,8 @@ user.add( camera );
 scene.add(user);
 user.translateZ(350);
 
+var ambient = new THREE.AmbientLight(0x444444);
+scene.add(ambient);
 // Create a renderer with Antialiasing
 var renderer = new THREE.WebGLRenderer({antialias:true});
 document.body.appendChild( WEBVR.createButton( renderer ) );
@@ -23,6 +25,8 @@ renderer.setClearColor("#000000");
 // Configure renderer size
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.vr.enabled = true;
+renderer.shadowMap.enabled = true;
+renderer.shadowMapSoft = true;
 // Append Renderer to DOM
 document.body.appendChild( renderer.domElement );
 console.log(camera.position,"hi");
@@ -34,18 +38,26 @@ console.log(camera.position,"hi");
 // Creates and textures 3 halos
 var texture = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry = new THREE.TorusGeometry( 150, 20, 80, 100 );
-var material = new THREE.MeshBasicMaterial( { map: texture } );
+var material = new THREE.MeshLambertMaterial( { map: texture } );
+//material = new THREE.MeshLambertMaterial({ color: 0xffffff });
 var torus = new THREE.Mesh( geometry, material );
+torus.castShadow = true;
+torus.receiveShadow = true;
 
 var texture2 = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry2 = new THREE.TorusGeometry( 100, 20, 80, 100 );
-var material2 = new THREE.MeshBasicMaterial( { map: texture2 } );
+var material2 = new THREE.MeshLambertMaterial( { map: texture2 } );
 var torus2 = new THREE.Mesh( geometry2, material2 );
+torus2.castShadow = true;
+torus2.receiveShadow = true;
 
 var texture3 = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry3 = new THREE.TorusGeometry( 50, 20, 80, 100 );
-var material3 = new THREE.MeshBasicMaterial( { map: texture3 } );
+var material3 = new THREE.MeshLambertMaterial( { map: texture3 } );
 var torus3 = new THREE.Mesh( geometry3, material3 );
+torus3.castShadow = true;
+torus3.receiveShadow = true;
+console.log(torus.castShadow)
 
 // generates background particles
 var material4 = new THREE.PointsMaterial({ color: 0xffffff, size: 1, sizeAttenuation: false });
