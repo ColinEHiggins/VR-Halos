@@ -81,8 +81,8 @@ console.log(light)
 var ambient = new THREE.AmbientLight(0x444444);
 scene.add(ambient);
 
-var helper = new THREE.DirectionalLightHelper(light, 50);
-scene.add(helper)
+//var helper = new THREE.DirectionalLightHelper(light, 50);
+//scene.add(helper)
 
 // Create a renderer with Antialiasing
 var renderer = new THREE.WebGLRenderer({antialias:true});
