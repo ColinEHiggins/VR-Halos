@@ -6,6 +6,7 @@
 var scene = new THREE.Scene();
 var cameraLocation = 0;
 var lastLocation = 0;
+
 // Create a basic perspective camera
 var camera = new THREE.PerspectiveCamera( 100, window.innerWidth/window.innerHeight, 0.1, 1000 );
 var user = new THREE.Group();
@@ -93,7 +94,17 @@ console.log(torus.position,"torus");
 // checks to see if mouse position overlaps with any of the points contained by 
 // any of the halos
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+document.addEventListener('mousemove', mouseMove, false);
 
+function mouseMove( event ) 
+{
+		mouseX = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouseY = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		
+		console.log(mouseX, "X");
+		console.log(mouseY, "Y");
+	
+}
 
 function onDocumentMouseDown( event ) {
 	var raycaster = new THREE.Raycaster();
@@ -122,6 +133,7 @@ function onDocumentMouseDown( event ) {
 		}
 	}
 }
+
 
 // Render Loop
 var render = function () {
@@ -166,6 +178,9 @@ var render = function () {
 	torus.rotation.x += 0.01;
   	torus2.rotation.y += 0.02;
   	torus3.rotation.z += 0.03;
+	
+	pointCloud.rotation.y +=0.01;
+	pointCloud.rotation.z += 0.01;
 	renderer.setAnimationLoop( function () {
 		renderer.render( scene, camera );
 	});
