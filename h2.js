@@ -6,6 +6,10 @@
 var scene = new THREE.Scene();
 var cameraLocation = 0;
 var lastLocation = 0;
+var set0 = false;
+var set1 = false;
+var set2 = false;
+var set3 = false;
 
 // Setup for locking the cursor
 /* // other vars
@@ -178,26 +182,42 @@ console.log(torus.position,"torus");
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 var radians = 0.03;
 var move = 10;
+var fwd = false;
+var bwd = false;
+var right = false;
+var left = false;
+var up = false;
+var down = false;
+
 document.addEventListener( 'keydown', onKeyDown, false );
 
 function onKeyDown( event ) 
 {
-    switch( event.keyCode ) {
+	if(cameraLocation == 0)
+	{
+		switch( event.keyCode ) {
 		case 87: // w (move forward) -z
-			camera.translateZ(-move);
+			fwd = true;
 			break;
-		
 		case 65: //a (move left) -x
-			camera.translateX(-move);
+			left = true;
 			break;
-		
+		case 82: //r (move up)
+			up = true;
+			break;
+		case 70: // f (move down)
+			down = true;
+			break;
 		case 83: // s (move backward) +z
-			camera.translateZ(move);
+			bwd = true;
 			break;
 		case 68: // d(move right) +x
-			camera.translateX(move);
+			right = true;
 			break;
-		
+		}
+	}
+	switch( event.keyCode ) 
+	{
         case 37: // left arrow (look left)
 			camera.rotateY( radians );
 			break;
@@ -216,21 +236,52 @@ function onKeyDown( event )
 
 		case 48: // number 0 (jump outside toruses)
 			cameraLocation = 0;
+			set0 = true;
 			break;
 
 		case 49: // number 1 (jump to outermost torus)
 			cameraLocation = 1;
+			set1 = true;
 			break;
 
 		case 50: // number 2 (jump to middle torus)
 			cameraLocation = 2;
+			set2 = true;
 			break;
 
 		case 51: // number 3 (jump to innermost torus)
 			cameraLocation = 3;
+			set3 = true;
+			break;
+    }  
+}
+document.addEventListener( 'keyup', onKeyUp, false );
+
+function onKeyUp( event ) 
+{
+    switch( event.keyCode ) {
+		case 87: // w (move forward) -z
+			fwd = false;
+			break;
+		case 82: //r (move up)
+			up = false;
+			break;
+		case 70: // f (move down)
+			down = false;
+			break;
+		case 65: //a (move left) -x
+			left = false;
+			break;
+		
+		case 83: // s (move backward) +z
+			bwd = false;
+			break;
+		case 68: // d(move right) +x
+			right = false;
 			break;
     }
 }
+		
 
 function onDocumentMouseDown( event ) {
 	var raycaster = new THREE.Raycaster();
@@ -248,14 +299,17 @@ function onDocumentMouseDown( event ) {
 		if (intersectRadius > 150){
 			console.log('torus');
 			cameraLocation = 1;
+			set1 = true;
 		}
 		else if (intersectRadius > 100) {
 			console.log('torus2');
 			cameraLocation = 2;
+			set2 = true;
 		}
 		else {
 			console.log('torus3');
 			cameraLocation = 3;
+			set3 = true;
 		}
 	}
 	// Kept here in case mouse rotation will be used later. Allows us to lock the cursor
@@ -282,7 +336,7 @@ function onDocumentMouseDown( event ) {
 
 // Render Loop
 var render = function () {
-	if (cameraLocation == 0) {
+  	if (cameraLocation == 0 && set0) {
 		user.position.set(0, 0, 350);
 		if (lastLocation != 0) {
 			user.rotation.x = 0;
@@ -294,7 +348,7 @@ var render = function () {
 			camera.rotation.z = 0;
 		}
 	}
-	if (cameraLocation == 1){
+	if (cameraLocation == 1 && set1){
 		temp = cameraLocationOne.getWorldPosition(new THREE.Vector3(0, 0, 0));
 		user.position.set(temp.x,temp.y,temp.z);
 		if (lastLocation!=1){
@@ -308,7 +362,7 @@ var render = function () {
 		}
 		user.rotation.x += 0.01;
 	}
-	else if (cameraLocation == 2) {
+	else if (cameraLocation == 2 && set2) {
 		temp = cameraLocationTwo.getWorldPosition(new THREE.Vector3(0, 0, 0));
 		user.position.set(temp.x, temp.y, temp.z);
 		if (lastLocation != 2) {
@@ -322,7 +376,7 @@ var render = function () {
 		}
 		user.rotation.y += 0.01;
 	}
-	else if (cameraLocation == 3) {
+	else if (cameraLocation == 3 && set3) {
 		temp = cameraLocationThree.getWorldPosition(new THREE.Vector3(0, 0, 0));
 		user.position.set(temp.x, temp.y, temp.z);
 		if (lastLocation != 3) {
@@ -335,8 +389,39 @@ var render = function () {
 			camera.rotation.z = 0;
 		}
 		user.rotation.z += 0.01;
+	}  
+
+	if(fwd)
+	{
+		user.position.z-=move;
+		set0 = false;
 	}
-		
+	if(bwd)
+	{
+		user.position.z+=move;
+		set0 = false;
+	}
+	if(right)
+	{
+		user.position.x+=move;
+		set0 = false;
+	}
+	if(left)
+	{
+		user.position.x-=move;
+		set0 = false;
+	}
+	if(up)
+	{
+		user.position.y+=move;
+		set0 = false;
+	}
+	if(down)
+	{
+		user.position.y-=move;
+		set0 = false;
+	}	
+	
   	requestAnimationFrame( render );
 	torus.rotation.x += 0.01;
   	torus2.rotation.y += 0.01;
