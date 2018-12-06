@@ -181,7 +181,7 @@ console.log(torus.position,"torus");
 // any of the halos
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 var radians = 0.03;
-var move = 10;
+var move = 5;
 var fwd = false;
 var bwd = false;
 var right = false;
