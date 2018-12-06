@@ -268,10 +268,6 @@ function onDocumentMouseDown( event ) {
 
 // Render Loop
 var render = function () {
-	cl1.rotation.x += 0.01;
-	cl2.rotation.y += 0.02;
-	cl3.rotation.z += 0.03;
-
 	if (cameraLocation == 0) {
 		user.position.set(0, 0, 350);
 		if (lastLocation != 0) {
@@ -284,7 +280,6 @@ var render = function () {
 			camera.rotation.z = 0;
 		}
 	}
-
 	if (cameraLocation == 1){
 		temp = cameraLocationOne.getWorldPosition(new THREE.Vector3(0, 0, 0));
 		user.position.set(temp.x,temp.y,temp.z);
@@ -297,11 +292,10 @@ var render = function () {
 			camera.rotation.y = 0;
 			camera.rotation.z = 0;
 		}
-		user.rotation.x+= 0.01;
+		user.rotation.x += 0.01;
 	}
 	else if (cameraLocation == 2) {
 		temp = cameraLocationTwo.getWorldPosition(new THREE.Vector3(0, 0, 0));
-		user.position.set(temp.x, temp.y, temp.z);
 		user.position.set(temp.x, temp.y, temp.z);
 		if (lastLocation != 2) {
 			user.rotation.x = 0;
@@ -312,7 +306,7 @@ var render = function () {
 			camera.rotation.y = 0;
 			camera.rotation.z = 0;
 		}
-		user.rotation.y += 0.02;
+		user.rotation.y += 0.01;
 	}
 	else if (cameraLocation == 3) {
 		temp = cameraLocationThree.getWorldPosition(new THREE.Vector3(0, 0, 0));
@@ -326,13 +320,19 @@ var render = function () {
 			camera.rotation.y = 0;
 			camera.rotation.z = 0;
 		}
-		user.rotation.z += 0.03
+		user.rotation.z += 0.01;
 	}
 		
   	requestAnimationFrame( render );
 	torus.rotation.x += 0.01;
-  	torus2.rotation.y += 0.02;
-  	torus3.rotation.z += 0.03;
+  	torus2.rotation.y += 0.01;
+	torus3.rotation.z += 0.01;
+
+	
+	
+	cl1.rotation.x += 0.01;
+	cl2.rotation.y += 0.01;
+	cl3.rotation.z += 0.01;
 	
 	renderer.setAnimationLoop( function () {
 		renderer.render( scene, camera );
