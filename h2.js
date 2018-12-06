@@ -198,6 +198,21 @@ function onKeyDown( event )
         camera.rotateX( -radians );
         break;
 
+		case 48: // number 0 (jump outside toruses)
+		cameraLocation = 0;
+		break;
+
+		case 49: // number 1 (jump to outermost torus)
+			cameraLocation = 1;
+			break;
+
+		case 50: // number 2 (jump to middle torus)
+			cameraLocation = 2;
+			break;
+
+		case 51: // number 3 (jump to innermost torus)
+			cameraLocation = 3;
+			break;
     }
 }
 
@@ -254,6 +269,20 @@ var render = function () {
 	cl1.rotation.x += 0.01;
 	cl2.rotation.y += 0.02;
 	cl3.rotation.z += 0.03;
+
+	if (cameraLocation == 0) {
+		user.position.set(0, 0, 350);
+		if (lastLocation != 0) {
+			user.rotation.x = 0;
+			user.rotation.y = 0;
+			user.rotation.z = 0;
+			lastLocation = 0;
+			camera.rotation.x = 0;
+			camera.rotation.y = 0;
+			camera.rotation.z = 0;
+		}
+	}
+
 	if (cameraLocation == 1){
 		temp = cameraLocationOne.getWorldPosition(new THREE.Vector3(0, 0, 0));
 		user.position.set(temp.x,temp.y,temp.z);
