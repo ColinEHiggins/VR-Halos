@@ -262,6 +262,9 @@ var render = function () {
 			user.rotation.y = 0;
 			user.rotation.z = 0;
 			lastLocation = 1;
+			camera.rotation.x = 0;
+			camera.rotation.y = 0;
+			camera.rotation.z = 0;
 		}
 		user.rotation.x+= 0.01;
 	}
@@ -274,6 +277,9 @@ var render = function () {
 			user.rotation.y = torus2.rotation.y+Math.PI/2;
 			user.rotation.z = Math.PI/2;
 			lastLocation = 2;
+			camera.rotation.x = 0;
+			camera.rotation.y = 0;
+			camera.rotation.z = 0;
 		}
 		user.rotation.y += 0.02;
 	}
@@ -285,6 +291,9 @@ var render = function () {
 			user.rotation.y = 0;
 			user.rotation.z = torus3.rotation.z;
 			lastLocation = 3;
+			camera.rotation.x = 0;
+			camera.rotation.y = 0;
+			camera.rotation.z = 0;
 		}
 		user.rotation.z += 0.03
 	}
