@@ -338,7 +338,7 @@ function onDocumentMouseDown( event ) {
 var render = function () {
   	if (cameraLocation == 0 && set0) {
 		user.position.set(0, 0, 350);
-		if (lastLocation != 0) {
+		if (lastLocation != 0 || set0) {
 			user.rotation.x = 0;
 			user.rotation.y = 0;
 			user.rotation.z = 0;
@@ -346,6 +346,7 @@ var render = function () {
 			camera.rotation.x = 0;
 			camera.rotation.y = 0;
 			camera.rotation.z = 0;
+			set0 = false;
 		}
 	}
 	if (cameraLocation == 1 && set1){
