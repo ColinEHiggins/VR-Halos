@@ -177,32 +177,46 @@ console.log(torus.position,"torus");
 // any of the halos
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 var radians = 0.03;
-var speed = 10;
+var move = 10;
 document.addEventListener( 'keydown', onKeyDown, false );
 
 function onKeyDown( event ) 
 {
     switch( event.keyCode ) {
-
+		case 87: // w (move forward) -z
+			camera.translateZ(-move);
+			break;
+		
+		case 65: //a (move left) -x
+			camera.translateX(-move);
+			break;
+		
+		case 83: // s (move backward) +z
+			camera.translateZ(move);
+			break;
+		case 68: // d(move right) +x
+			camera.translateX(move);
+			break;
+		
         case 37: // left arrow (look left)
-        camera.rotateY( radians );
-        break;
+			camera.rotateY( radians );
+			break;
 
         case 39: // right arrow (look right)
-        camera.rotateY( -radians );
-        break;
+			camera.rotateY( -radians );
+			break;
 
         case 38: // up arrow (look up)
-        camera.rotateX( radians );
-        break;
+			camera.rotateX( radians );
+			break;
 
         case 40: // down arrow (look down)
-        camera.rotateX( -radians );
-        break;
+			camera.rotateX( -radians );
+			break;
 
 		case 48: // number 0 (jump outside toruses)
-		cameraLocation = 0;
-		break;
+			cameraLocation = 0;
+			break;
 
 		case 49: // number 1 (jump to outermost torus)
 			cameraLocation = 1;
