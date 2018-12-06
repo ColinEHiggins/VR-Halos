@@ -105,24 +105,26 @@ console.log(camera.position,"hi");
 
 // Creates and textures 3 halos
 var texture = new THREE.TextureLoader().load( 'texture1.jpg' );
-var bumpMapTexture = new THREE.TextureLoader().load('Bump2.png');
+var displacementMapTexture = new THREE.TextureLoader().load('Displacement.png');
 var geometry = new THREE.TorusGeometry( 150, 20, 80, 100 );
 //var material = new THREE.MeshLambertMaterial( { map: texture } );
-var material = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, displacementMap: bumpMapTexture, displacementScale: 10 });
+var material = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, displacementMap: displacementMapTexture, displacementScale: 10 });
 var torus = new THREE.Mesh( geometry, material );
 torus.castShadow = true;
 torus.receiveShadow = true;
 
 var texture2 = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry2 = new THREE.TorusGeometry( 100, 20, 80, 100 );
-var material2 = new THREE.MeshLambertMaterial( { map: texture2 } );
+var normalMapTexture = new THREE.TextureLoader().load('Normal.png');
+var material2 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, normalMap: normalMapTexture, bumpScale: 10 });
 var torus2 = new THREE.Mesh( geometry2, material2 );
 torus2.castShadow = true;
 torus2.receiveShadow = true;
 
 var texture3 = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry3 = new THREE.TorusGeometry( 50, 20, 80, 100 );
-var material3 = new THREE.MeshLambertMaterial( { map: texture3 } );
+var bumpMapTexture = new THREE.TextureLoader().load('Bump.png');
+var material3 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, bumpMap: bumpMapTexture, bumpScale: 20 });
 var torus3 = new THREE.Mesh( geometry3, material3 );
 torus3.castShadow = true;
 torus3.receiveShadow = true;
