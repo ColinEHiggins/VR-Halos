@@ -65,7 +65,7 @@ scene.add(user);
 user.translateZ(350);
 
 //create Lighting
-var light = new THREE.DirectionalLight( 0x00FF00);
+var light = new THREE.DirectionalLight( 0xFFFFFF);
 light.position.set(200,200,200);
 light.target.position.set(0,0,0);
 light.shadow.camera.near = 0;
@@ -105,10 +105,10 @@ console.log(camera.position,"hi");
 
 // Creates and textures 3 halos
 var texture = new THREE.TextureLoader().load( 'texture1.jpg' );
-var bumpMapTexture = new THREE.TextureLoader().load('Bump.png');
+var bumpMapTexture = new THREE.TextureLoader().load('Bump2.png');
 var geometry = new THREE.TorusGeometry( 150, 20, 80, 100 );
 //var material = new THREE.MeshLambertMaterial( { map: texture } );
-var material = new THREE.MeshPhongMaterial({ color: 0x00ffff, bumpMap: bumpMapTexture, bumpScale: 100 });
+var material = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, displacementMap: bumpMapTexture, displacementScale: 10 });
 var torus = new THREE.Mesh( geometry, material );
 torus.castShadow = true;
 torus.receiveShadow = true;
