@@ -176,7 +176,7 @@ console.log(torus.position,"torus");
 // checks to see if mouse position overlaps with any of the points contained by 
 // any of the halos
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
-var radians = 0.08;
+var radians = 0.03;
 var speed = 10;
 document.addEventListener( 'keydown', onKeyDown, false );
 
