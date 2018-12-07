@@ -392,31 +392,39 @@ var render = function () {
 		user.rotation.z += 0.01;
 	}  
 
+	var axis = new THREE.Vector3();
+	axis = camera.getWorldDirection(axis);
+	var angToConvert = 90 * Math.PI / 180;
+	
 	if(fwd)
 	{
-		user.position.z-=move;
+		user.translateOnAxis(axis, move);
 		set0 = false;
 	}
 	if(bwd)
 	{
-		user.position.z+=move;
+		user.translateOnAxis(axis, -move);
 		set0 = false;
 	}
 	if(right)
 	{
-		user.position.x+=move;
+		axis.applyAxisAngle(new THREE.Vector3(0, 1, 0), angToConvert);
+		user.translateOnAxis(axis, -move);
 		set0 = false;
 	}
 	if(left)
 	{
-		user.position.x-=move;
+		axis.applyAxisAngle(new THREE.Vector3(0, 1, 0), angToConvert);
+		user.translateOnAxis(axis, move);
 		set0 = false;
 	}
+	
 	if(up)
 	{
 		user.position.y+=move;
 		set0 = false;
 	}
+	
 	if(down)
 	{
 		user.position.y-=move;
