@@ -408,14 +408,16 @@ var render = function () {
 	}
 	if(right)
 	{
-		axis.applyAxisAngle(new THREE.Vector3(0, 1, 0), angToConvert);
-		user.translateOnAxis(axis, -move);
+		user.position.x+=move;
+/* 		axis.applyAxisAngle(new THREE.Vector3(0, 1, 0), angToConvert);
+		user.translateOnAxis(axis, -move); */
 		set0 = false;
 	}
 	if(left)
 	{
-		axis.applyAxisAngle(new THREE.Vector3(0, 1, 0), angToConvert);
-		user.translateOnAxis(axis, move);
+		user.position.x-=move;
+/* 		axis.applyAxisAngle(new THREE.Vector3(0, 1, 0), angToConvert);
+		user.translateOnAxis(axis, move); */
 		set0 = false;
 	}
 	
