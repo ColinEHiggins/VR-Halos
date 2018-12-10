@@ -11,6 +11,20 @@ var set1 = false;
 var set2 = false;
 var set3 = false;
 
+
+var datInputHandling = function(){
+	this.Displacement_Map_Scale = 10;
+	this.Normal_Map_Scale = 1;
+	this.Bump_Map_Scale = 1;
+}
+var handler = new datInputHandling()
+window.onload = function() {
+	var gui = new dat.GUI();
+	gui.add(handler, 'Displacement_Map_Scale', 0, 20);
+	gui.add(handler, 'Normal_Map_Scale', -1, 1).step(1);
+	gui.add(handler, 'Bump_Map_Scale', -1, 1).step(0.01);
+};
+    
 // Setup for locking the cursor
 /* // other vars
 var controlsEnabled = false;
@@ -112,26 +126,29 @@ var texture = new THREE.TextureLoader().load( 'texture1.jpg' );
 var displacementMapTexture = new THREE.TextureLoader().load('Displacement.png');
 var geometry = new THREE.TorusGeometry( 150, 20, 80, 100 );
 //var material = new THREE.MeshLambertMaterial( { map: texture } );
-var material = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, displacementMap: displacementMapTexture, displacementScale: 10 });
+var material = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, displacementMap: displacementMapTexture, displacementScale: handler.displacementScale, needsUpdate: true });
 var torus = new THREE.Mesh( geometry, material );
 torus.castShadow = true;
 torus.receiveShadow = true;
+torus.material.needsUpdate = true;
 
 var texture2 = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry2 = new THREE.TorusGeometry( 100, 20, 80, 100 );
 var normalMapTexture = new THREE.TextureLoader().load('Normal.png');
-var material2 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, normalMap: normalMapTexture, bumpScale: 10 });
+var material2 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, normalMap: normalMapTexture, needsUpdate: true });
 var torus2 = new THREE.Mesh( geometry2, material2 );
+torus2.material.needsUpdate = true;
 torus2.castShadow = true;
 torus2.receiveShadow = true;
 
 var texture3 = new THREE.TextureLoader().load( 'texture1.jpg' );
 var geometry3 = new THREE.TorusGeometry( 50, 20, 80, 100 );
 var bumpMapTexture = new THREE.TextureLoader().load('Bump.png');
-var material3 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, bumpMap: bumpMapTexture, bumpScale: 20 });
+var material3 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, bumpMap: bumpMapTexture, bumpScale: handler.Bump_Map_Scale, needsUpdate: true });
 var torus3 = new THREE.Mesh( geometry3, material3 );
 torus3.castShadow = true;
 torus3.receiveShadow = true;
+torus3.material.needsUpdate = true;
 console.log(torus.castShadow)
 
 // generates background particles
@@ -336,6 +353,12 @@ function onDocumentMouseDown( event ) {
 
 // Render Loop
 var render = function () {
+	material = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, displacementMap: displacementMapTexture, displacementScale: handler.Displacement_Map_Scale, needsUpdate: true });
+	torus.material = material;
+	material2 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, normalMap: normalMapTexture, normalScale: new THREE.Vector2(0,handler.Normal_Map_Scale), needsUpdate: true });
+	torus2.material = material2;
+	material3 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, bumpMap: bumpMapTexture, bumpScale: handler.Bump_Map_Scale, needsUpdate: true });
+	torus3.material = material3;
   	if (cameraLocation == 0 && set0) {
 		user.position.set(0, 0, 350);
 		if (lastLocation != 0 || set0) {
