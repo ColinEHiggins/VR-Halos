@@ -21,7 +21,7 @@ var handler = new datInputHandling()
 window.onload = function() {
 	var gui = new dat.GUI();
 	gui.add(handler, 'Displacement_Map_Scale', 0, 20);
-	gui.add(handler, 'Normal_Map_Scale', -1, 1).step(1);
+	gui.add(handler, 'Normal_Map_Scale', -1, 1);
 	gui.add(handler, 'Bump_Map_Scale', -1, 1).step(0.01);
 };
     
