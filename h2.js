@@ -24,41 +24,13 @@ window.onload = function() {
 	gui.add(handler, 'Normal_Map_Scale', -1, 1);
 	gui.add(handler, 'Bump_Map_Scale', -1, 1).step(0.01);
 };
-    
-// Setup for locking the cursor
-/* // other vars
-var controlsEnabled = false;
-var raycaster2;
-
-
-var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-			if ( havePointerLock ) {
-				var element = document.body;
-				var pointerlockchange = function ( event ) {
-					if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
-						controlsEnabled = true;
-						controls.enabled = true;
-					} else {
-						controlsEnabled = false;
-						controls.enabled = false;
-					}
-				};
-				var pointerlockerror = function ( event ) {
-						console.log("Oops");
-				};
-				// Hook pointer lock state change events
-				document.addEventListener( 'pointerlockchange', pointerlockchange, false );
-				document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
-				document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
-				document.addEventListener( 'pointerlockerror', pointerlockerror, false );
-				document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
-				document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
-			}  */
 			
 // Create a basic perspective camera
+// Create a group to help with camera movement
 var camera = new THREE.PerspectiveCamera( 100, window.innerWidth/window.innerHeight, 0.1, 1000 );
 var user = new THREE.Group();
 
+// Create an audio listener for background music 
 var listener = new THREE.AudioListener();
 camera.add(listener);
 
@@ -75,14 +47,15 @@ audioLoader.load('ambient.wav', function (buffer) {
 	sound.play();
 });
 
-
-
-
+// attaches the camera to the user and adds the user to the scene
 user.add( camera );
 scene.add(user);
+
+// sets users position
 user.translateZ(350);
 
-//create Lighting
+//creates a directional light source and add it to the scene
+// handles shadows
 var light = new THREE.DirectionalLight( 0xFFFFFF);
 light.position.set(200,200,200);
 light.target.position.set(0,0,0);
@@ -96,15 +69,14 @@ light.castShadow = true;
 scene.add(light);
 console.log(light)
 
+// generates ambient light source and adds to scene
 var ambient = new THREE.AmbientLight(0x444444);
 scene.add(ambient);
-
-//var helper = new THREE.DirectionalLightHelper(light, 50);
-//scene.add(helper)
 
 // Create a renderer with Antialiasing
 var renderer = new THREE.WebGLRenderer({antialias:true});
 document.body.appendChild( WEBVR.createButton( renderer ) );
+
 // Configure renderer clear color
 renderer.setClearColor("#000000");
 
@@ -113,6 +85,7 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.vr.enabled = true;
 renderer.shadowMap.enabled = true;
 renderer.shadowMapSoft = true;
+
 // Append Renderer to DOM
 document.body.appendChild( renderer.domElement );
 console.log(camera.position,"hi");
@@ -125,7 +98,7 @@ console.log(camera.position,"hi");
 var texture = new THREE.TextureLoader().load( 'texture1.jpg' );
 var displacementMapTexture = new THREE.TextureLoader().load('Displacement.png');
 var geometry = new THREE.TorusGeometry( 150, 20, 80, 100 );
-//var material = new THREE.MeshLambertMaterial( { map: texture } );
+
 var material = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, displacementMap: displacementMapTexture, displacementScale: handler.displacementScale, needsUpdate: true });
 var torus = new THREE.Mesh( geometry, material );
 torus.castShadow = true;
@@ -151,7 +124,7 @@ torus3.receiveShadow = true;
 torus3.material.needsUpdate = true;
 console.log(torus.castShadow)
 
-// generates background particles
+// generates white, stationary background particles 
 var material4 = new THREE.PointsMaterial({ color: 0xffffff, size: 1, sizeAttenuation: false });
 var geometry4 = new THREE.Geometry();
 var x, y, z;
@@ -167,6 +140,7 @@ for (i = 0; i < 15000; i++)
     
     var pointCloud = new THREE.Points(geometry4, material4);
 
+// Generates preset camera locations
 var cameraLocationOne = new THREE.Object3D()
 cameraLocationOne.translateY(-125);
 var cl1 = new THREE.Group();
@@ -183,7 +157,7 @@ cl3.add(cameraLocationThree)
 
 
 
-// Add halos and particles to scene
+// Add halos, particles, and presets to the scene
 scene.add( cl1 );
 scene.add( cl2 );
 scene.add( cl3 );
@@ -194,9 +168,10 @@ scene.add(pointCloud);
 
 console.log(torus.position,"torus");
 
-// checks to see if mouse position overlaps with any of the points contained by 
-// any of the halos
+// listens for a mouseclick event
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+// variables used to deal with camera movement and rotation
 var radians = 0.03;
 var move = 5;
 var fwd = false;
@@ -206,10 +181,13 @@ var left = false;
 var up = false;
 var down = false;
 
+// keyboard event listener
+// deals with camera movement and rotation
 document.addEventListener( 'keydown', onKeyDown, false );
 
 function onKeyDown( event ) 
 {
+	// Movement restricted to camera position 0
 	if(cameraLocation == 0)
 	{
 		switch( event.keyCode ) {
@@ -233,6 +211,7 @@ function onKeyDown( event )
 			break;
 		}
 	}
+	// Camera rotation and presets are always allowed
 	switch( event.keyCode ) 
 	{
         case 37: // left arrow (look left)
@@ -272,6 +251,8 @@ function onKeyDown( event )
 			break;
     }  
 }
+// Event listener for movement key release
+// Allows for smoother movement
 document.addEventListener( 'keyup', onKeyUp, false );
 
 function onKeyUp( event ) 
@@ -299,8 +280,9 @@ function onKeyUp( event )
     }
 }
 		
-
+// Mouse click callback function
 function onDocumentMouseDown( event ) {
+	// Raycasting to determine mouseclick intersection with any halos.
 	var raycaster = new THREE.Raycaster();
 	var vector = new THREE.Vector3(
         ( event.clientX / window.innerWidth ) * 2 - 1,
@@ -309,6 +291,8 @@ function onDocumentMouseDown( event ) {
     );
 
 	raycaster.setFromCamera( vector, camera);
+	// Sets the camera position based on the which object the 
+	// mouse position intersects
 	var intersects = raycaster.intersectObjects(scene.children);
 	if(intersects.length!=0){
 		intersectRadius = intersects[0].object.geometry.boundingSphere.radius
@@ -329,36 +313,23 @@ function onDocumentMouseDown( event ) {
 			set3 = true;
 		}
 	}
-	// Kept here in case mouse rotation will be used later. Allows us to lock the cursor
- 	/* // Ask the browser to lock the pointer
- 	element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-	if ( /Firefox/i.test( navigator.userAgent ) ) {
-		var fullscreenchange = function ( event ) {
-			if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
-				document.removeEventListener( 'fullscreenchange', fullscreenchange );
-				document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
-				element.requestPointerLock();
-			}
-		};
-		document.addEventListener( 'fullscreenchange', fullscreenchange, false );
-		document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
-		element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-		element.requestFullscreen();
-	} else {
-		element.requestPointerLock();
-	}
-	raycaster2 = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );  */
 }
 
 
 // Render Loop
 var render = function () {
+	// Sets the material of the halos based on the scale of the mappings
+	// read in from the GUI
 	material = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, displacementMap: displacementMapTexture, displacementScale: handler.Displacement_Map_Scale, needsUpdate: true });
 	torus.material = material;
 	material2 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, normalMap: normalMapTexture, normalScale: new THREE.Vector2(0,handler.Normal_Map_Scale), needsUpdate: true });
 	torus2.material = material2;
 	material3 = new THREE.MeshPhongMaterial({ map: texture, color: 0x00ffff, bumpMap: bumpMapTexture, bumpScale: handler.Bump_Map_Scale, needsUpdate: true });
 	torus3.material = material3;
+	
+	// The camera location determines the rotation speed of the camera
+	// Depending on which halo the camera is attached to, the user will rotate at the speed 
+	// of the halo.
   	if (cameraLocation == 0 && set0) {
 		user.position.set(0, 0, 350);
 		if (lastLocation != 0 || set0) {
@@ -415,10 +386,12 @@ var render = function () {
 		user.rotation.z += 0.01;
 	}  
 
+	// Gets the local z-axis of the camera
 	var axis = new THREE.Vector3();
 	axis = camera.getWorldDirection(axis);
 	var angToConvert = 90 * Math.PI / 180;
 	
+	// Moves the user/camera depending on which keyevent was triggered
 	if(fwd)
 	{
 		user.translateOnAxis(axis, move);
@@ -432,15 +405,11 @@ var render = function () {
 	if(right)
 	{
 		user.position.x+=move;
-/* 		axis.applyAxisAngle(new THREE.Vector3(0, 1, 0), angToConvert);
-		user.translateOnAxis(axis, -move); */
 		set0 = false;
 	}
 	if(left)
 	{
 		user.position.x-=move;
-/* 		axis.applyAxisAngle(new THREE.Vector3(0, 1, 0), angToConvert);
-		user.translateOnAxis(axis, move); */
 		set0 = false;
 	}
 	
@@ -456,13 +425,14 @@ var render = function () {
 		set0 = false;
 	}	
 	
+	// torus rotation
   	requestAnimationFrame( render );
 	torus.rotation.x += 0.01;
   	torus2.rotation.y += 0.01;
 	torus3.rotation.z += 0.01;
 
 	
-	
+	// camera position rotation based on which halo the location represents
 	cl1.rotation.x += 0.01;
 	cl2.rotation.y += 0.01;
 	cl3.rotation.z += 0.01;
